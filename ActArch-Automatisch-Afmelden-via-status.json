@@ -1,0 +1,62 @@
+{
+    "formatVersion": "2.6",
+    "exportDate": 1554320870708,
+    "actionSequence": {
+        "name": "Automatisch afmelden (status)",
+        "description": "Actiereeks gedownload vanaf het Actiereeks-archief:\nhttps://topdeskforum.laansloot.nl/c/actiereeks-archief",
+        "structureName": "incident2",
+        "configuration": {
+            "variables": [
+                {
+                    "name": "TOPdeskURL",
+                    "value": ""
+                },
+                {
+                    "name": "TOPdeskLoginZichtbaar",
+                    "value": ""
+                },
+                {
+                    "name": "Status",
+                    "value": "Afgemeld"
+                }
+            ],
+            "mappingDefinitions": [],
+            "steps": [
+                {
+                    "name": "getprocessingstatus",
+                    "method": "GET",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/incidents/processing_status",
+                    "headers": [
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginZichtbaar}"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "",
+                    "executionCondition": "ALWAYS",
+                    "customExecutionCondition": ""
+                },
+                {
+                    "name": "putincident",
+                    "method": "PUT",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/incidents/id/${unid}",
+                    "headers": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        },
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginZichtbaar}"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "{\n  \"action\" : \"Deze melding is automatisch gesloten.\",\n  \"actionInvisibleForCaller\" : \"false\",\n  \"processingStatus\" : { \"id\" : \"<#list _responses.getprocessingstatus.body as status><#if status.name == \"${_variables.Status}\">${status.id}</#if></#list>\" }\n}",
+                    "executionCondition": "ALWAYS",
+                    "customExecutionCondition": ""
+                }
+            ]
+        }
+    }
+}

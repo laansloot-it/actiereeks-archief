@@ -1,0 +1,55 @@
+{
+    "formatVersion": "2.6",
+    "exportDate": 1554728067240,
+    "actionSequence": {
+        "name": "Uitgebreide wijziging sluiten (via status)",
+        "description": "Actiereeks gedownload vanaf het Actiereeks-archief:\nhttps://topdeskforum.laansloot.nl/c/actiereeks-archief",
+        "structureName": "change3",
+        "configuration": {
+            "variables": [
+                {
+                    "name": "TOPdeskURL",
+                    "value": ""
+                },
+                {
+                    "name": "TOPdeskLoginZichtbaar",
+                    "value": ""
+                },
+                {
+                    "name": "TOPdeskLoginOnzichtbaar",
+                    "value": ""
+                },
+                {
+                    "name": "Status",
+                    "value": "Afgesloten"
+                }
+            ],
+            "mappingDefinitions": [],
+            "steps": [
+                {
+                    "name": "patchchange",
+                    "method": "PATCH",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/operatorChanges/${unid}",
+                    "headers": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json-patch+json"
+                        },
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginOnzichtbaar}"
+                        },
+                        {
+                            "name": "Accept",
+                            "value": "application/json"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "[\n{\n  \"op\" : \"add\",\n  \"path\" : \"/progressTrail\",\n  \"value\" : \"Deze wijziging is automatisch gesloten, omdat alle activiteiten zijn afgerond.\"\n},\n{\n  \"op\" : \"replace\",\n  \"path\" : \"/status\",\n  \"value\" : \"${_variables.Status}\"\n}\n]",
+                    "executionCondition": "ALWAYS",
+                    "customExecutionCondition": ""
+                }
+            ]
+        }
+    }
+}

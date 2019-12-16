@@ -1,0 +1,70 @@
+{
+    "formatVersion": "2.6",
+    "exportDate": 1554577366976,
+    "actionSequence": {
+        "name": "Wijzigingsactiviteit synchroniseren (zichtb.)",
+        "description": "Actiereeks gedownload vanaf het Actiereeks-archief:\nhttps://topdeskforum.laansloot.nl/c/actiereeks-archief",
+        "structureName": "changeactivity1",
+        "configuration": {
+            "variables": [
+                {
+                    "name": "TOPdeskURL",
+                    "value": ""
+                },
+                {
+                    "name": "TOPdeskLoginZichtbaar",
+                    "value": ""
+                }
+            ],
+            "mappingDefinitions": [],
+            "steps": [
+                {
+                    "name": "getchangeactivity",
+                    "method": "GET",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/operatorChangeActivities/${unid}",
+                    "headers": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        },
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginZichtbaar}"
+                        },
+                        {
+                            "name": "Accept",
+                            "value": "application/json"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "",
+                    "executionCondition": "ALWAYS",
+                    "customExecutionCondition": ""
+                },
+                {
+                    "name": "patchchange",
+                    "method": "PATCH",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/operatorChanges/${_responses.getchangeactivity.body.change.id?no_esc}",
+                    "headers": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json-patch+json"
+                        },
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginZichtbaar}"
+                        },
+                        {
+                            "name": "Accept",
+                            "value": "application/json"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "[\n{\n  \"op\" : \"add\",\n  \"path\" : \"/progressTrail\",\n  \"value\" : \"${number} (${briefdescription}) - ${_responses.getchangeactivity.body.assignee.groupName?no_esc}. Update door ${(_progresstrail.actions?first.creator.name)!}:${'\\n'}${(_progresstrail.actions?first.plaintext)!}\"\n}\n]",
+                    "executionCondition": "ALWAYS",
+                    "customExecutionCondition": ""
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,51 @@
+{
+    "formatVersion": "2.6",
+    "exportDate": 1574882787320,
+    "actionSequence": {
+        "name": "Wijzigingsaanvraag goedkeuren (via vinkje)",
+        "description": "Actiereeks gedownload vanaf het Actiereeks-archief:\nhttps://topdeskforum.laansloot.nl/c/actiereeks-archief",
+        "structureName": "change1",
+        "configuration": {
+            "variables": [
+                {
+                    "name": "TOPdeskURL",
+                    "value": ""
+                },
+                {
+                    "name": "TOPdeskLoginZichtbaar",
+                    "value": ""
+                },
+                {
+                    "name": "TOPdeskLoginOnzichtbaar",
+                    "value": ""
+                }
+            ],
+            "mappingDefinitions": [],
+            "steps": [
+                {
+                    "name": "postchange",
+                    "method": "POST",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/operatorChanges/${unid}/processingStatusTransitions",
+                    "headers": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        },
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginZichtbaar}"
+                        },
+                        {
+                            "name": "Accept",
+                            "value": "application/json"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "{\n  \"from\": \"rfc\",\n  \"action\": \"approve\",\n  \"comment\": \"Deze wijziging is automatisch goedgekeurd.\"\n}\n",
+                    "executionCondition": "ALWAYS",
+                    "customExecutionCondition": ""
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "formatVersion": "2.6",
+    "exportDate": 1554320842310,
+    "actionSequence": {
+        "name": "Automatisch afmelden (vinkje)",
+        "description": "Actiereeks gedownload vanaf het Actiereeks-archief:\nhttps://topdeskforum.laansloot.nl/c/actiereeks-archief",
+        "structureName": "incident2",
+        "configuration": {
+            "variables": [
+                {
+                    "name": "TOPdeskURL",
+                    "value": ""
+                },
+                {
+                    "name": "TOPdeskLoginZichtbaar",
+                    "value": ""
+                }
+            ],
+            "mappingDefinitions": [],
+            "steps": [
+                {
+                    "name": "putincident",
+                    "method": "PUT",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/incidents/id/${unid}",
+                    "headers": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        },
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginZichtbaar}"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "{\n  \"action\" : \"Deze melding is automatisch gesloten.\",\n  \"actionInvisibleForCaller\" : \"false\",\n  \"closed\" : \"true\"\n}",
+                    "executionCondition": "ALWAYS",
+                    "customExecutionCondition": ""
+                }
+            ]
+        }
+    }
+}

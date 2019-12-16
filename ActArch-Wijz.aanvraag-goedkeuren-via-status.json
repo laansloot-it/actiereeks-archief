@@ -1,0 +1,55 @@
+{
+    "formatVersion": "2.6",
+    "exportDate": 1574327561323,
+    "actionSequence": {
+        "name": "Wijzigingsaanvraag goedkeuren (via status)",
+        "description": "Actiereeks gedownload vanaf het Actiereeks-archief:\nhttps://topdeskforum.laansloot.nl/c/actiereeks-archief",
+        "structureName": "change1",
+        "configuration": {
+            "variables": [
+                {
+                    "name": "TOPdeskURL",
+                    "value": ""
+                },
+                {
+                    "name": "TOPdeskLoginZichtbaar",
+                    "value": ""
+                },
+                {
+                    "name": "TOPdeskLoginOnzichtbaar",
+                    "value": ""
+                },
+                {
+                    "name": "Status",
+                    "value": "Goedgekeurd"
+                }
+            ],
+            "mappingDefinitions": [],
+            "steps": [
+                {
+                    "name": "patchchange",
+                    "method": "PATCH",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/operatorChanges/${unid}",
+                    "headers": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json-patch+json"
+                        },
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginZichtbaar}"
+                        },
+                        {
+                            "name": "Accept",
+                            "value": "application/json"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "[\n{\n  \"op\" : \"add\",\n  \"path\" : \"/progressTrail\",\n  \"value\" : \"Deze wijziging is automatisch goedgekeurd.\"\n},\n{\n  \"op\": \"replace\",\n  \"path\": \"/status\",\n  \"value\": \"${_variables.Status}\"\n}\n]",
+                    "executionCondition": "ALWAYS",
+                    "customExecutionCondition": ""
+                }
+            ]
+        }
+    }
+}

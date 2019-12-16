@@ -1,0 +1,70 @@
+{
+    "formatVersion": "2.6",
+    "exportDate": 1575577405033,
+    "actionSequence": {
+        "name": "Uitgebreide wijziging sluiten (via vinkje)",
+        "description": "Actiereeks gedownload vanaf het Actiereeks-archief:\nhttps://topdeskforum.laansloot.nl/c/actiereeks-archief",
+        "structureName": "change3",
+        "configuration": {
+            "variables": [
+                {
+                    "name": "TOPdeskURL",
+                    "value": ""
+                },
+                {
+                    "name": "TOPdeskLoginZichtbaar",
+                    "value": ""
+                },
+                {
+                    "name": "TOPdeskLoginOnzichtbaar",
+                    "value": ""
+                }
+            ],
+            "mappingDefinitions": [],
+            "steps": [
+                {
+                    "name": "getchange",
+                    "method": "GET",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/operatorChanges/${unid}",
+                    "headers": [
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginZichtbaar}"
+                        },
+                        {
+                            "name": "Accept",
+                            "value": "application/json"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "",
+                    "executionCondition": "ALWAYS",
+                    "customExecutionCondition": ""
+                },
+                {
+                    "name": "postprocessingstatustransition",
+                    "method": "POST",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/operatorChanges/${unid}/processingStatusTransitions",
+                    "headers": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        },
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginZichtbaar}"
+                        },
+                        {
+                            "name": "Accept",
+                            "value": "application/json"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "<#assign currentphase = \"${_responses.getchange.body.processingStatus}\">\n\n{\n  \"from\": \"${currentphase}\",\n  \"action\": \"approve\",\n  \"comment\": \"Deze wijziging is automatisch gesloten, omdat alle activiteiten zijn afgerond.\"\n}",
+                    "executionCondition": "ALWAYS",
+                    "customExecutionCondition": ""
+                }
+            ]
+        }
+    }
+}

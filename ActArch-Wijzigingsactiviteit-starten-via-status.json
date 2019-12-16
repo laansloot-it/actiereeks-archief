@@ -1,0 +1,51 @@
+{
+    "formatVersion": "2.6",
+    "exportDate": 1554796874485,
+    "actionSequence": {
+        "name": "Wijzigingsactiviteit starten (via status)",
+        "description": "Actiereeks gedownload vanaf het Actiereeks-archief:\nhttps://topdeskforum.laansloot.nl/c/actiereeks-archief",
+        "structureName": "changeactivity1",
+        "configuration": {
+            "variables": [
+                {
+                    "name": "TOPdeskURL",
+                    "value": ""
+                },
+                {
+                    "name": "TOPdeskLoginZichtbaar",
+                    "value": ""
+                },
+                {
+                    "name": "Status",
+                    "value": "Gestart"
+                }
+            ],
+            "mappingDefinitions": [],
+            "steps": [
+                {
+                    "name": "patchchangeactivity",
+                    "method": "PATCH",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/operatorChangeActivities/${unid}",
+                    "headers": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json-patch+json"
+                        },
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginZichtbaar}"
+                        },
+                        {
+                            "name": "Accept",
+                            "value": "application/json"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "[\n{\n  \"op\": \"replace\",\n  \"path\": \"/status\",\n  \"value\": \"${_variables.Status}\"\n}\n]",
+                    "executionCondition": "ALWAYS",
+                    "customExecutionCondition": ""
+                }
+            ]
+        }
+    }
+}
