@@ -1,0 +1,70 @@
+{
+    "formatVersion": "2.6",
+    "exportDate": 1577906197930,
+    "actionSequence": {
+        "name": "Behandelaarsaccount archiveren",
+        "description": "Actiereeks gedownload vanaf het Actiereeks-archief:\nhttps://topdeskforum.laansloot.nl/c/actiereeks-archief",
+        "structureName": "persoon1",
+        "configuration": {
+            "variables": [
+                {
+                    "name": "TOPdeskURL",
+                    "value": ""
+                },
+                {
+                    "name": "TOPdeskLoginZichtbaar",
+                    "value": ""
+                },
+                {
+                    "name": "TOPdeskLoginOnzichtbaar",
+                    "value": ""
+                }
+            ],
+            "mappingDefinitions": [],
+            "steps": [
+                {
+                    "name": "getoperator",
+                    "method": "GET",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/operators?topdesk_login_name=${tasloginnaam}&page_size=1",
+                    "headers": [
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginZichtbaar}"
+                        },
+                        {
+                            "name": "Accept",
+                            "value": "application/json"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "",
+                    "executionCondition": "ALWAYS",
+                    "customExecutionCondition": ""
+                },
+                {
+                    "name": "archiveoperator",
+                    "method": "PUT",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/operators/id/${_responses.getoperator.body[0].id}/archive",
+                    "headers": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        },
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginZichtbaar}"
+                        },
+                        {
+                            "name": "Accept",
+                            "value": "application/json"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "{}",
+                    "executionCondition": "ONLY_WHEN_PREVIOUS_SUCCEEDED",
+                    "customExecutionCondition": ""
+                }
+            ]
+        }
+    }
+}
