@@ -62,7 +62,7 @@
                     "escapeBodyValues": true,
                     "body": "{}",
                     "executionCondition": "CUSTOM",
-                    "customExecutionCondition": "<#assign personloginname = \"${tasloginnaam}\"?lower_case>\n<#assign operatorloginname = \"${_responses.getoperator.body[0].loginName}\"?lower_case>\n<#if personloginname == operatorloginname>true<#else>false</#if>\n"
+                    "customExecutionCondition": "<#if tasloginnaam == _responses.getoperator.body[0].loginName>true</#if>"
                 }
             ]
         }
