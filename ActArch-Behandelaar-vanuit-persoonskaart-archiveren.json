@@ -62,7 +62,7 @@
                     "escapeBodyValues": true,
                     "body": "{}",
                     "executionCondition": "CUSTOM",
-                    "customExecutionCondition": "<#if tasloginnaam == _responses.getoperator.body[0].loginName>true</#if>"
+                    "customExecutionCondition": "<#if tasloginnaam?upper_case == _responses.getoperator.body[0].loginName?upper_case>true</#if>"
                 }
             ]
         }
