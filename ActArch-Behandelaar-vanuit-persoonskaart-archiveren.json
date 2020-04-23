@@ -1,6 +1,6 @@
 {
     "formatVersion": "2.7",
-    "exportDate": 1587406235604,
+    "exportDate": 1587668448286,
     "actionSequence": {
         "name": "Behandelaarsaccount archiveren",
         "description": "Actiereeks gedownload vanaf het Actiereeks-archief:\nhttps://topdeskforum.laansloot.nl/c/actiereeks-archief",
@@ -62,7 +62,7 @@
                     "escapeBodyValues": true,
                     "body": "{}",
                     "executionCondition": "CUSTOM",
-                    "customExecutionCondition": "<#if _responses.getoperator.body?? &&\n(tasloginnaam?upper_case == _responses.getoperator.body[0].loginName?upper_case)>true</#if>"
+                    "customExecutionCondition": "<#if _responses.getoperator.body?? && tasloginnaam?has_content &&\n(tasloginnaam?upper_case == _responses.getoperator.body[0].loginName?upper_case)>true</#if>"
                 }
             ]
         }
