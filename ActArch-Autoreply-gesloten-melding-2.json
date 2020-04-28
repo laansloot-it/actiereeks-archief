@@ -1,0 +1,89 @@
+{
+    "formatVersion": "2.7",
+    "exportDate": 1588087471835,
+    "actionSequence": {
+        "name": "Autoreply op gesloten melding",
+        "description": "Actiereeks gedownload vanaf het Actiereeks-archief:\nhttps://topdeskforum.laansloot.nl/c/actiereeks-archief",
+        "structureName": "incident1",
+        "configuration": {
+            "variables": [
+                {
+                    "name": "TOPdeskURL",
+                    "value": ""
+                },
+                {
+                    "name": "TOPdeskLoginZichtbaar",
+                    "value": ""
+                },
+                {
+                    "name": "MailimportEmail",
+                    "value": ""
+                }
+            ],
+            "mappingDefinitions": [],
+            "steps": [
+                {
+                    "name": "getprogresstrail",
+                    "method": "GET",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/incidents/id/${unid}/progresstrail?page_size=2",
+                    "headers": [
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginZichtbaar}"
+                        },
+                        {
+                            "name": "Accept",
+                            "value": "application/json"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "",
+                    "executionCondition": "ALWAYS",
+                    "customExecutionCondition": ""
+                },
+                {
+                    "name": "emptysentfromfield",
+                    "method": "PUT",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/incidents/id/${unid}",
+                    "headers": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        },
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginZichtbaar}"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "{\n   \"optionalFields2\" : { \"text1\" : \"\" }\n}",
+                    "executionCondition": "CUSTOM",
+                    "customExecutionCondition": "<#if attvrijetekst1?has_content && (_responses.getprogresstrail.body[0].sender?has_content || _responses.getprogresstrail.body[1].sender?has_content)>true</#if>"
+                },
+                {
+                    "name": "fillsentfromfield",
+                    "method": "PUT",
+                    "url": "${_variables.TOPdeskURL?no_esc}/tas/api/incidents/id/${unid}",
+                    "headers": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        },
+                        {
+                            "name": "Authorization",
+                            "value": "BASIC ${_variables.TOPdeskLoginZichtbaar}"
+                        },
+                        {
+                            "name": "Accept",
+                            "value": "application/json"
+                        }
+                    ],
+                    "escapeBodyValues": true,
+                    "body": "<#if _responses.getprogresstrail.body[0].sender?has_content>\n<#assign sender = _responses.getprogresstrail.body[0].sender><#else>\n<#assign sender = _responses.getprogresstrail.body[1].sender></#if>\n\n{\n   \"optionalFields2\" : { \"text1\" : \"${sender}\" }\n}",
+                    "executionCondition": "CUSTOM",
+                    "customExecutionCondition": "<#if\n(_responses.getprogresstrail.body[0].sender?has_content && _responses.getprogresstrail.body[0].sender != _variables.MailimportEmail) ||\n(_responses.getprogresstrail.body[1].sender?has_content && _responses.getprogresstrail.body[1].sender != _variables.MailimportEmail)>true</#if>"
+                }
+            ]
+        }
+    }
+}
